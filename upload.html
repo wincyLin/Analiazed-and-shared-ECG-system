@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <meta charset="utf-8">
+        <title>上传心电图</title>
+        <meta name="renderer" content="webkit">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="format-detection" content="telephone=no">
+        <link rel="stylesheet" type="text/css" href="css/upload.css">
+        <script type="text/javascript" src="js/jquery-2.2.3.min.js"></script>
+        <script type="text/javascript" src="angularjs/angular.min.js"></script> 
+    	<script type="text/javascript" src="angularjs/pagination.js"></script>
+        <script type="text/javascript">
+        window.onload=function () {
+            var arrayLi=document.getElementById("U1").getElementsByTagName("li");
+            for(var i=0;i<arrayLi.length;i++){
+                if(arrayLi[i].className=="menulist"){
+                    arrayLi[i].onmouseover=function () {
+                        this.className="show";
+                    }
+                    arrayLi[i].onmouseout=function () {
+                        this.className="";
+                    }
+                    console.log(arrayLi.length)
+                }
+            }
+
+        }
+        
+/*        function changepic() { 
+      	$("#prompt3").css("display", "none"); 
+        	var reads = new FileReader(); 
+        	f = document.getElementById('file').files[0]; 
+        	reads.readAsDataURL(f); 
+        	reads.onload = function(e) { 
+        		console.log("12");
+        		document.getElementById('img3').src = this.result; 
+        		$("#img3").css("display", "block"); 
+        	}; 
+        }*/
+       
+    	var uri = "http://localhost:8082/";
+    
+    
+    	var app = angular.module('UsersApp', ['pagination']);
+    	
+    
+    
+    	app.controller('UsersController', function($scope, $http) {
+    		
+    		var uploadService = {
+    		uploadFile:function(){
+				// 向后台传递数据:
+				var formData = new FormData();
+				// 向formData中添加数据:
+				formData.append("file",file.files[0]);
+				
+				return $http({
+					method:'post',
+					url:'http://localhost:8088/uploadFile',
+					data:formData,
+					headers:{'Content-Type':undefined} ,// Content-Type : text/html  text/plain
+					transformRequest: angular.identity
+				});
+			}
+    	}
+    		
+
+        	$scope.save = function() {
+    			var methodName = "addUsers";
+    		    var phone=document.getElementById("phone").value; 
+
+    			$http.post(uri + methodName, $scope.entity).success(function(response) {
+    				if(response.success=true) {
+    					console.log(response)
+/*  					window.location.href="ceshijieguo.html?phone="+phone;
+*/    				} else {
+    					alert('操作失败！');
+    				}
+    			});
+    		}
+        	
+        	// 文件上传的方法:
+	$scope.uploadFile = function(){
+
+
+		uploadService.uploadFile().success(function(response){
+			if(response){
+				console.log("12")
+				$scope.entity.pic = response.message;
+			}else{
+				alert(response.message);
+			}
+		});
+	}
+	
+	});
+        
+        </script>
+
+    </head>
+    
+    <body ng-app="UsersApp" ng-controller="UsersController" >
+     <div id="head_right">
+        <ul id="U1">
+            <li class="menulist">
+                <a href="zcdlu.html"><b>注册/登录</b></a>
+            </li>
+            <li class="menulist">
+                <a href="#"><b>服务</b></a>
+               <ul>
+                   <li><a href="upload.html">上传心电图</a></li>
+                   <li><a href="#">与医生交流</a></li>
+                   <li><a href="#">加入心电论坛</a></li>
+               </ul>
+            </li>
+            <li class="menulist">
+                <a href="about_us.html"><b>关于我们</b></a>
+                <ul>
+                    <li><a href="contact_us.html">联系我们</a></li>
+                    <li><a href="about_us.html">了解我们</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    	<form action="cgi-bin/hello.py" method="post">
+        <div class="x-body">
+        	 
+                <div class="title">
+                  <label for="L_title" class="layui-form-label1">
+                        <span style="font-size: 30px;">上传心电图</span>
+                  </label>   
+                </div>
+     <div class="item">     
+              用户名  <input type="text" id="name" name="name" class="layui-input" ng-model="entity.name">          
+      <br/>          
+               手机号  <input type="text" id="phone" name="phone" class="layui-input" ng-model="entity.phone">
+	 <br/>
+	 年龄    <select name="age" id="age" class="layui-input" style="margin-left: 10px;" ng-model="entity.age">
+               	<option value="10~20">10~20</option>
+               	<option value="21~30">21~30</option>
+               	<option value="31~40">31~40</option>
+               	<option value="41~50">41~50</option>
+               	<option value="51~60">51~60</option>
+               	<option value="61~70">61~70</option>
+               	<option value="71~80">71~80</option>
+               	<option value="81~90">81~90</option>
+               	<option value="91~100">91~100</option>
+        </select>
+	 <br />
+               性别    <select name="sex" id="sex" class="layui-input" style="margin-left: 10px;" ng-model="entity.sex">
+               	<option value="男">男</option>
+               	<option value="女">女</option>
+        </select>
+  	<br />
+      
+                   <textarea id="beizhu" name="beizhu" 
+                        placeholder="请输入内容" class="layui-textarea fly-editor" ng-model="entity.beizhu" style="height: 100px;width: 410px;">填写备注信息</textarea>
+
+                <br />
+                <div id="imgPreview">
+                	<div id="prompt3">
+                		<span id="imgSpan">
+                 点击上传
+                  <br />
+                 <i class="aui-iconfont aui-icon-plus"></i>
+                  <!--AUI框架中的图标-->
+                 </span>
+                		<input type="file" id="file" class="filepath" accept="image/jpg,image/jpeg,image/png,image/PNG">
+                		<input type="button" value="上传" ng-click="uploadFile()"/>
+                		<!--当vaule值改变时执行changepic函数，规定上传的文件只能是图片-->
+                	</div>
+                	<img src="{{entity.pic}}" id="pic" name="pic"/>
+                </div>
+			<div class="button1">
+                    <input type="submit" class="button" ng-click="save()" value="提交" style="margin-left: 10px;" />
+                    <input type="reset" class="button" value="重置" />  
+			</div>
+               
+          </form>
+    </div>
+    </div>
+
+    </body>
+
+</html>

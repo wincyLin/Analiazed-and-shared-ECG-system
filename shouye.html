@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎来到心电分析与共享系统</title>    
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="adminLTE/css/AdminLTE.css" />
+    <link rel="stylesheet" href="adminLTE/css/skins/_all-skins.css" />
+    <link rel="stylesheet" href="angularjs/pagination.css" />
+    <link rel="stylesheet" type="text/css" href="css/head.css">
+    <link rel="stylesheet" type="text/css" href="css/bottom.css">
+    <script src="jQuery/jquery-2.2.3.min.js"></script>
+ 	<script src="bootstrap/js/bootstrap.min.js"></script>
+ 	<script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="angularjs/angular.min.js"></script> 
+    <script type="text/javascript" src="angularjs/pagination.js"></script>
+    <script type="text/javascript">
+        window.onload=function () {
+            var arrayLi=document.getElementById("U1").getElementsByTagName("li");
+            for(var i=0;i<arrayLi.length;i++){
+                if(arrayLi[i].className=="menulist"){
+                    arrayLi[i].onmouseover=function () {
+                        this.className="show";
+                    }
+                    arrayLi[i].onmouseout=function () {
+                        this.className="";
+                    }
+                    //console.log(arrayLi.length)
+                }
+            }
+
+        }
+        
+        
+        var uri = "http://localhost:8087/";
+    
+    
+    	var app = angular.module('AdverApp', []);
+    	
+    
+    
+    	app.controller('AdverController', function($scope, $http) {
+    		
+    		$scope.contentList = [];
+	// 根据ID查询广告的方法:
+	$scope.findByCategoryId = function(categoryId){
+		$http.get(uri+'findByCategoryId?categoryId='+categoryId).success(function(response){
+			$scope.contentList[categoryId] = response;
+			console.log($scope.contentList[categoryId])
+		});
+	}
+
+    	
+    	});
+    	
+
+    </script>
+</head>
+<body ng-app="AdverApp" ng-controller="AdverController" ng-init="findByCategoryId(1)">
+<!--页头-->
+<div id="head">
+    <div id="head_left">
+        <a href="shouye.html"><strong style="font-size: 100px;color: #000000;">ECG</strong>
+        	<br><strong style="font-size:60px;color: #1161EE;">分析与共享系统</strong></a>
+    </div>
+    <div id="head_right">
+        <ul id="U1">
+            <li class="menulist">
+                <a href="zcdlu.html"><b>注册/登录</b></a>
+                <!--<ul>
+                    <li><a href="#">管理员注册</a></li>
+                    <li><a href="#">医生注册</a></li>
+                    <li><a href="#">市民注册</a></li>
+                </ul>-->
+            </li>
+            <!--<li class="menulist">
+                <a href="#"><b>登录</b></a>
+                <ul>
+                    <li><a href="#">管理员登录</a></li>
+                    <li><a href="#">医生登录</a></li>
+                    <li><a href="#">市民登录</a></li>
+                </ul>
+            </li>-->
+            <li class="menulist">
+                <a href="#"><b>服务</b></a>
+               <ul>
+                   <li><a href="#">上传心电图</a></li>
+                   <li><a href="#">与医生交流</a></li>
+                   <li><a href="#">加入心电论坛</a></li>
+               </ul>
+            </li>
+            <li class="menulist">
+                <a href="#"><b>关于我们</b></a>
+                <ul>
+                    <li><a href="#">联系我们</a></li>
+                    <li><a href="#">了解我们</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="hrror"></div>
+
+<!--轮播图-->
+<div>
+    <!--<div id="lunbo">
+        <ul class="banner-img-ul">
+            <li class="banner-img-li"><img src="images/xindian1.jpg"></li>
+            <li class="banner-img-li"><img src="images/bot.jpg"></li>
+
+        </ul>
+    </div>-->
+    
+    <div class="yui3-u Center banerArea">
+					<!--banner轮播-->
+					<div id="myCarousel" data-ride="carousel" data-interval="4000" class="sui-carousel slide">
+					  <ol class="carousel-indicators">
+					    <!-- <li data-target="#myCarousel" data-slide-to="0" class="active"></li> -->
+					    <li data-target="#myCarousel" data-slide-to="{{$index}}" class="{{$index==0?'active':''}}" ng-repeat="item in contentList[1]"></li>
+					  </ol>
+					  <div class="carousel-inner">
+					    <div class="{{$index==0?'active':''}} item" ng-repeat="item in contentList[1]">
+					      
+					    	<img src="{{item.pic}}" style="width: 750px;height: 450px;border: midnightblue solid 3px;display: block;margin-left: 114px;margin-top: 16px;max-width:750px;"/>
+					      </a>
+					    </div>
+					   	
+					  </div><a href="#myCarousel" data-slide="prev" class="carousel-control left">‹</a><a href="#myCarousel" data-slide="next" class="carousel-control right">›</a>
+					</div>
+				</div>
+    
+    
+    
+    
+    
+    <!--<div id="yuandian">
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+    </div>
+
+    <input type="button" value=">" class="btn btn1">
+    <input type="button" value="<" class="btn btn2">-->
+
+<!--right-->
+<div class="knew">
+    <dl id="xin">
+        <dt class="zi1">
+            <span class="p1">心电基本知识</span>
+        </dt>
+        <dd class="zi">
+            <div class="p2"><span style="font-family: '微软雅黑';font-size: 15px;">一.什么是心电图?<br>
+            	&nbsp;&nbsp;&nbsp;&nbsp;我们的心脏之所以能够进行收缩和舒张运动,是因为心肌细胞能够产生生物电,当这种生物电经人体组织传递到体表时,用心电图机把这些生物电记录下来,描记成曲线,并给予适当的解释,就是心电图.简单地说,就是用心电图机记录下心脏活动过程中所产生的生物电.<br>二. 正常心电图的特征：<br>&nbsp;&nbsp;&nbsp;&nbsp;
+(1) 心率为60~100次/分
+(2) 各导联P波均存在，P波形态正常
+(3) 每个P波后都有QRS波
+(4) PR间期为0.12~0.20s
+(5) QRS波时间≤0.12s，无病理学Q波，无左/右心室肥厚高电压
+(6) QT间期＜0.45s
+(7) QRS心电轴不偏
+(8) 胸导联正常R波递增
+(9) ST段无抬高、无压低
+(10) T波双支圆滑不对称</span></div>
+        </dd>
+
+    </dl>
+</div>
+</div>
+<!--文章列表-->
+<div class="pagination-bar">
+    <dl id="dian">
+        <dt class="zi2">
+            <span class="p1" style="margin-top: -6px;">ECG文章推荐</span>
+        </dt>
+        <dd class="zi3"><a href="#">>>ECG介绍文章</a></dd>
+        <dd class="zi3"><a href="#">>>心电监测仪怎么看数值</a></dd>
+        <dd class="zi3"><a href="#">>>零基础学会看心电图</a></dd>
+        <dd class="zi3"><a href="#">>>了解ECG</a></dd>
+        <dd class="zi3"><a href="#">>>心血管病例分析</a></dd>
+    </dl>
+</div>
+
+
+
+<!--页脚-->
+<div id="bot">
+<div id="bot-bot">
+        <p>&copy;版权所有</p>
+</div>
+</div>
+</body>
+
+</html>

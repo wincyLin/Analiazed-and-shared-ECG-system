@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Implementation-Title: jiance-model
+Implementation-Version: 0.0.1-SNAPSHOT
+Built-By: 12774
+Implementation-Vendor-Id: com.ecg.system
+Build-Jdk: 1.8.0_51
+Implementation-URL: https://projects.spring.io/spring-boot/#/spring-bo
+ ot-starter-parent/jiance-parent/jiance-model
+Created-By: Maven Integration for Eclipse
+

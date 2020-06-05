@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Implementation-Title: heart-model
+Implementation-Version: 0.0.1-SNAPSHOT
+Built-By: 12774
+Implementation-Vendor-Id: com.web.heart
+Build-Jdk: 1.8.0_51
+Implementation-URL: https://projects.spring.io/spring-boot/#/spring-bo
+ ot-starter-parent/heart-parent/heart-model
+Created-By: Maven Integration for Eclipse
+

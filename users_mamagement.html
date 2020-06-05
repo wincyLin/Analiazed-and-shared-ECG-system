@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>用户账号管理</title>
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="adminLTE/css/AdminLTE.css">
+    <link rel="stylesheet" href="adminLTE/css/skins/_all-skins.min.css">
+    <link rel="stylesheet" href="css/daohang.css"/>
+    <link rel="stylesheet" href="css/public.css">
+    
+     <link rel="stylesheet" href="angularjs/pagination.css">
+      
+	<script src="jQuery/jquery-2.2.3.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    
+    <script type="text/javascript" src="angularjs/angular.min.js"></script>
+    
+     <script type="text/javascript" src="angularjs/pagination.js"></script>
+    
+    <script type="text/javascript">
+    	var base_url="http://localhost:8081/"
+    	var app=angular.module('UsersApp',['pagination']);
+    	app.controller('UsersController',function($scope,$http){
+    		//查询所有用户账号
+    		$scope.findAllUsers=function(){
+    			$http.get(base_url+'loadAllUsers').success(function(response){
+    				$scope.userList=response;
+    			});
+    		}
+    		//查询某一用户账号
+    		$scope.findOne=function(user_id){
+    	    	$http.get(base_url+'loadOneUsers/'+user_id).success(function(response){
+    	    		$scope.entity=response;
+    	    	});
+    	    }
+    		
+    		//添加和修改共同函数
+    	    $scope.save=function(){
+    	    	var methName="addUsers";
+    	    	//添加判断修改或添加操作
+    	    	if($scope.entity.id !=null){//修改
+    	    		methName="updateUsers";
+    	    	}
+    	    	$http.post(base_url+methName,$scope.entity).success(function(response){
+    	    		if(response.success==true){
+    	    			$scope.findAllUsers();//重新加载最新数据
+    	    		}else{
+    	    			alert('操作失败');
+    	    		}
+    	    	});
+    	    }
+    	    //批量删除账号
+    	     $scope.selectedIds=[];//定义保存被删除数据的ID的数组
+    	    //$event用于获取当前checkbox的状态 checked
+    	    $scope.selectionUpdate=function(user_id,event){
+    	    	if(event.target.checked){
+    	    		 $scope.selectedIds.push(user_id);
+    	    	}else{
+    	    		var index= $scope.selectedIds.indexOf(user_id);
+    	    		$scope.selectedIds.splice(index,1);
+    	    	}
+    	    }
+    	    $scope.dele=function(){
+    	    	if(confirm('确定删除该账号信息吗？')){
+    	    			$http.get(base_url+'deleteUsers?ids='+$scope.selectedIds).success(function(response){
+    	    			if(response.success==true){
+    	    			$scope.findAllUsers();//重新加载最新数据
+    	    			}else{
+    	    				alert('操作失败');
+    	    			}
+    	    			});
+    	    	}
+    	    }
+    	    
+    	    //分页控件配置currentPage:当前页   totalItems :总记录数  
+    	    //itemsPerPage:每页记录数  perPageOptions :分页选项  onChange:当页码变更后自动触发的方法
+			$scope.paginationConf = {
+				currentPage : 1,
+				totalItems : 5,
+				itemsPerPage : 5,
+				perPageOptions : [ 10, 20, 30, 40, 50 ],
+				onChange : function() {
+					$scope.reloadList();
+				}
+			};
+    	    
+    	    //分页的请求函数
+    	    $scope.reloadList=function(){
+    	    	$scope.findByPage($scope.paginationConf.currentPage,$scope.paginationConf.itemsPerPage);
+    	    }
+    	    
+    	    $scope.findByPage=function(page_no,page_size){
+    	    	$http.get(base_url+'findUsersByPage?pageNo='+page_no+'&pageSize='+page_size).success(function(response){
+    	    		$scope.userList=response.rows;
+    	    		$scope.paginationConf.totalItems=response.total;
+    	    	});
+    	    }
+    	    
+    	});
+    </script>
+    
+</head>
+<body class="hold-transition skin-red sidebar-mini" ng-app="UsersApp" ng-controller="UsersController" >
+  	<!-- 左边节点 -->
+  		<div id="tou">
+			<h3 class="zi">ECG系统后台</h3>
+		</div>
+		<nav class="navbar" role="navigation">
+			<div class="bar">
+				<img src="images/touxiang.jpeg" alt="" style="margin-left: 10px;width: 70px;height: 70px;border-radius: 50%;overflow: hidden;"/>
+				
+					<strong style="color: white;font-size: 14px;display: block;margin-top: -50px;margin-left: 80px;">&nbsp;&nbsp;&nbsp;测试用户</strong>
+					<br/>
+					<b>在线</b>
+			</div>
+		</nav>
+			
+				
+	<div class="container">
+
+		<div class="leftsidebar_box">
+			<a href="shouye.html" target="shouye">
+            <div class="line">
+		    <img class="icon1" src="images/coin01.png" />
+            <img class="icon2" src="images/coin02.png" />&nbsp;&nbsp;首页
+			</div>
+            </a>
+            <!--症状诊断-->
+          
+				<dd>
+					<img class="coin11" src="images/coin111.png" />
+                    <img class="coin22" src="images/coin222.png" />
+                    <a href="test.html" target="main" class="cks">心理诊断测试</a>
+                    <img class="icon5" src="images/coin21.png" />
+				</dd>
+			</dl>
+            <!--档案管理-->
+            <!--<dl class="system_log">
+				<dt>
+					<img class="icon1" src="images/coin09.png" />
+                    <img class="icon2" src="images/coin10.png" />
+                     用户管理
+                    <img class="icon3" src="images/coin19.png" />
+                    <img class="icon4" src="images/coin20.png" />
+				</dt>
+				<dd>
+					<img class="coin11" src="images/coin111.png" />
+                    <img class="coin22" src="images/coin222.png" />
+                    <a href="Dangan.html" target="main" class="cks">档案管理</a>
+                    <img class="icon5" src="images/coin21.png" />
+				</dd>
+                <dd>
+					<img class="coin11" src="images/coin111.png" />
+                    <img class="coin22" src="images/coin222.png" />
+                    <a href="Shuju-one.html" target="main" class="cks">数据备份</a>
+                    <img class="icon5" src="images/coin21.png" />
+				</dd>
+		  </dl>-->
+        <!--用户管理-->
+			<dl class="system_log">
+				<dt>
+					<img class="icon1" src="images/coin07.png" />
+                    <img class="icon2" src="images/coin08.png" />
+                     用户管理
+                    <img class="icon3" src="images/coin19.png" />
+                  <img class="icon4" src="images/coin20.png" />
+				</dt>
+				<dd>  
+                    <a href="users_mamagement.html" target="main" class="cks">用户管理</a>
+				</dd>
+				<!--<dd>  
+                    <a href="grxx.html" target="main" class="cks">个人信息管理</a>
+                
+				</dd>-->
+                <dd>	
+                    <a href="Role_management.html" target="main" class="cks">角色管理</a>                   
+				</dd>
+			</dl>
+            
+			<dl class="system_log">
+				<dt>
+					<img class="icon1" src="images/coin05.png" />
+                    <img class="icon2" src="images/coin06.png" />
+                     数据管理
+                     <img class="icon3" src="images/coin19.png" />
+                     <img class="icon4" src="images/coin20.png" />
+				</dt>
+				<dd>
+                    <a class="cks" href="content.html" target="main">轮播图信息管理</a>
+				</dd>
+				<dd>
+                    <a class="cks" href="content2.html" target="main">心电图信息管理</a>
+                    <img class="icon5" src="images/coin21.png" />
+				</dd>
+                <dd>
+                    <a class="cks" href="#" target="main">文章管理</a>
+                    <img class="icon5" src="images/coin21.png" />
+				</dd>
+                <dd>
+                    <a class="cks" href="shujutongji.html" target="main">数据统计</a>
+                    <img class="icon5" src="images/coin21.png" />
+				</dd>
+			</dl>
+            
+			<dl class="system_log">
+				<dt>
+					<img class="icon1" src="images/coin03.png" />
+                    <img class="icon2" src="images/coin04.png" />
+                     网站信息管理
+                     <img class="icon3" src="images/coin19.png" />
+                     <img class="icon4" src="images/coin20.png" />
+				</dt>
+				<dd>
+                    <a href="shouye.html" target="main" class="cks">首页</a>
+                    <img class="icon5" src="images/coin21.png" />
+				</dd>
+                <dd>
+                    <a href="about_us.html" target="main" class="cks">关于我们</a>
+                    <img class="icon5" src="images/coin21.png" />
+				</dd>
+                <dd>
+                    <a href="contact_us.html" target="main" class="cks">联系我们</a>
+                    <img class="icon5" src="images/coin21.png" />
+				</dd>
+                <dd>
+                    <a href="Download-pic.html" target="main" class="cks">资源下载</a>
+                    <img class="icon5" src="images/coin21.png" />
+				</dd>
+			</dl>
+            
+			<dl class="system_log">
+				<dt>
+					<img class="icon1" src="images/coinL1.png" />
+                    <img class="icon2" src="images/coinL2.png" />
+                     系统设置
+                    <img class="icon3" src="images/coin19.png" />
+                    <img class="icon4" src="images/coin20.png" />
+				</dt>
+				<dd>
+                    <a href="./link.html" target="main" class="cks">友情链接</a>
+                    <img class="icon5" src="images/coin21.png" />
+				</dd>
+			</dl>
+
+		</div>
+
+	</div>
+                    <div class="box-header with-border">
+                        <h3 class="box-title">用户账号管理</h3>
+                    </div>
+
+                    <div class="box-body">
+
+                        <!-- 数据表格 -->
+                        <div class="table-box">
+
+                            <!--工具栏-->
+                            <div class="pull-left">
+                                <div class="form-group form-inline">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-default" title="新建" data-toggle="modal" data-target="#editModal" ng-click="entity={}"><i class="fa fa-file-o"></i> 新建</button>
+                                        <button type="button" class="btn btn-default" title="删除" ng-click="dele()"><i class="fa fa-trash-o"></i> 删除</button>           
+                                        <button type="button" class="btn btn-default" title="刷新" onclick="window.location.reload();"><i class="fa fa-refresh"></i> 刷新</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="box-tools pull-right">
+                                <div class="has-feedback">
+							                                         
+                                </div>
+                            </div>
+                            <!--工具栏/-->
+
+			                  <!--数据列表-->
+			                  <table id="dataList" class="table table-bordered table-striped table-hover dataTable">
+			                      <thead>
+			                          <tr>
+			                              <th class="" style="padding-right:0px">
+			                                  <input id="selall" type="checkbox" class="icheckbox_square-blue">
+			                              </th> 
+			                              <th class="sorting_asc">ID序号</th>
+										  <th class="sorting_asc">姓名</th>
+									      <th class="sorting">账号</th>									      
+									      <th class="sorting">密码</th>	
+									      <th class="sorting">身份</th>									      
+									      <th class="sorting">性别</th>	
+					                      <th class="text-center">操作</th>
+			                          </tr>
+			                      </thead>
+			                      <tbody>
+			                          
+									  <tr ng-repeat="user in userList">
+			                              <td><input  type="checkbox" ng-click="selectionUpdate(user.id,$event)"></td>	
+			                              <td>{{user.id}}</td>
+				                          <td>{{user.name}}</td>
+									      <td>{{user.account}}</td>									     
+		                                  <td>{{user.pass}}</td>	
+		                                  <td>{{user.iden}}</td>									     
+		                                  <td>{{user.sex}}</td>
+		                                  <td class="text-center">                                           
+		                                 	  <button type="button" class="btn bg-olive btn-xs" data-toggle="modal" data-target="#editModal" ng-click="findOne(user.id)" style="background-color: #1161EE;">修改</button>                                           
+		                                  </td>
+			                          </tr>
+			                      </tbody>
+			                  </table>
+			                  <!--数据列表/-->                        
+							   <tm-pagination conf="paginationConf"></tm-pagination>
+							 
+                        </div>
+                        <!-- 数据表格 /-->
+                        
+                        
+                        
+                        
+                     </div>
+                    <!-- /.box-body -->
+         
+<!-- 编辑窗口 -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" >
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<h3 id="myModalLabel">用户账号编辑</h3>
+		</div>
+		<div class="modal-body">		
+			<table class="table table-bordered table-striped"  width="800px">
+		      	<tr>
+		      		<td>姓名</td>
+		      		<td><input  class="form-control" placeholder="姓名" ng-model="entity.name">  </td>
+		      	</tr>		      	
+		      	<tr>
+		      		<td>账号</td>
+		      		<td><input class="form-control" placeholder="账号" ng-model="entity.account" >  </td>
+		      	</tr>	
+		      	<tr>
+		      		<td>密码</td>
+		      		<td><input  class="form-control" placeholder="密码" ng-model="entity.pass">  </td>
+		      	</tr>	
+		      	<tr>
+		      		<td>身份</td>
+		      		<td>
+		      			<select class="form-control" ng-model="entity.iden">
+		      				<option value="管理员">管理员</option>
+		      				<option value="普通用户">普通用户</option>
+		      				<option value="医生">医生</option>
+		      			</select>
+		      		</td>
+		      	</tr>	
+		      	<tr>
+		      		<td>性别</td>
+		      		<td>
+		      			<select class="form-control" ng-model="entity.sex">
+		      				<option value="男">男</option>
+		      				<option value="女">女</option>
+		      			</select>
+		      		</td>
+		      	</tr>	
+			 </table>				
+		</div>
+		<div class="modal-footer">						
+			<button class="btn btn-success" data-dismiss="modal" aria-hidden="true" ng-click="save()">保存</button>
+			<button class="btn btn-default" data-dismiss="modal" aria-hidden="true">关闭</button>
+		</div>
+	  </div>
+	</div>
+</div>
+   
+</body>
+</html>

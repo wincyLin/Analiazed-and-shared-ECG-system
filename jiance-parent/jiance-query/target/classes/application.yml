@@ -1,0 +1,13 @@
+server:
+  port: 8082
+spring:
+  datasource:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      username: root
+      password: 
+      url: 'jdbc:mysql://localhost:3306/ecgsystem?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC'
+    
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+        

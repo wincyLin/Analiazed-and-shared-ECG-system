@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+			<meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+			<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+			<link rel="stylesheet" href="adminLTE/css/AdminLTE.css">
+			<link rel="stylesheet" href="adminLTE/css/skins/_all-skins.min.css">
+			<link rel="stylesheet" href="css/daohang.css" />
+			 <link rel="stylesheet" type="text/css" href="css/upload.css">
+			<link rel="stylesheet" href="css/public.css">
+			
+			<link rel="stylesheet" href="angularjs/pagination.css">
+			
+			<script src="jQuery/jquery-2.2.3.min.js"></script>
+			<script src="bootstrap/js/bootstrap.min.js"></script>
+			
+			<script type="text/javascript" src="angularjs/angular.min.js"></script>
+			
+			<script type="text/javascript" src="angularjs/pagination.js"></script>
+			<script type="text/javascript">
+    	var base_url="http://localhost:8082/"
+    	var app=angular.module('UsersApp',['pagination']);
+    	app.controller('UsersController',function($scope,$http){
+    		
+    		//查询某一用户账号
+    		$scope.findOne=function(phone){
+    	    	$http.get(base_url+'loadByPhone/'+phone).success(function(response){
+    	    		$scope.entity=response;
+    	    	});
+    	    }
+    		   
+    	   
+    	});
+    </script>
+	</head>
+	<body ng-app="UsersApp" ng-controller="UsersController" ng-init="findOne()">
+		<div class="item" style="margin-top: 115px;">     
+              用户名  <p>{{entity.name}}</p>        
+      <br/>          
+               手机号   <p>{{entity.phone}}</p>
+	 <br/>
+	 年龄     <p>{{entity.age}}</p>
+	 <br />
+               性别     <p>{{entity.sex}}</p>
+  	<br />
+      
+                  备注 <p id="beizhu" name="beizhu" 
+                         class="layui-textarea fly-editor"  style="height: 100px;width: 410px;">{{entity.beizhu}}</p>
+
+                <br />
+                <div id="imgPreview">
+                	<div id="prompt3">
+                		<span id="imgSpan">
+                 <img src="{{entity.pic}}" id="img3" />
+                 <i class="aui-iconfont aui-icon-plus"></i>
+                  <!--AUI框架中的图标-->
+                 </span>
+                		
+                	</div>
+                	
+                </div>
+	</body>
+</html>
